@@ -172,46 +172,7 @@ Embeddings convert discrete text tokens into high-dimensional continuous vector 
 
 ---
 
-## 🎯 9. 10 Technical Interview Questions & Answers
 
-#### Q1: What is Retrieval-Augmented Generation (RAG) and why is it useful?
-> **Answer:** RAG combines information retrieval with generative language models. It retrieves external context specific to a user query from a vector database and feeds it into the LLM's prompt. This allows LLMs to answer questions on private or domain-specific data without retraining or fine-tuning, while drastically reducing hallucinations.
-
-#### Q2: How does `RecursiveCharacterTextSplitter` work?
-> **Answer:** It splits text hierarchically using a list of separators (e.g., `["\n\n", "\n", ". ", " ", ""]`). It attempts to split on paragraph breaks first, falling back to sentences and words only when necessary to keep chunks below `chunk_size` while keeping related semantic sentences intact.
-
-#### Q3: What is the difference between Keyword Search (BM25) and Semantic Vector Search?
-> **Answer:** Keyword search (like BM25) matches exact vocabulary tokens. Semantic search converts text into dense vector embeddings, matching concepts based on high-dimensional mathematical proximity regardless of phrasing or synonyms.
-
-#### Q4: Why is chunk overlap necessary?
-> **Answer:** Without overlap, a critical sentence or fact located right at a chunk boundary might get cut in half. Overlapping chunks ensure that boundary context is preserved in both adjacent vectors.
-
-#### Q5: How do you handle non-retrievable queries (when the answer is not in the document)?
-> **Answer:** By engineering a strict system prompt instructing the model to evaluate the retrieved context and output a specific fallback string (e.g., *"I couldn't find this information in the uploaded document"*) if the context does not contain the answer.
-
-#### Q6: What embedding model did you choose and why?
-> **Answer:** We support local HuggingFace embeddings (`all-MiniLM-L6-v2`) which generate 384-dimensional vectors fast on CPU without API latency or quota limits, as well as Google `text-embedding-004` for higher multi-lingual accuracy.
-
-#### Q7: What happens if a PDF contains scanned images without text?
-> **Answer:** Standard PDF text extractors (like `pypdf`) extract zero characters from pure raster images. The application handles this gracefully by detecting empty character counts, alerting the user, and recommending an Optical Character Recognition (OCR) pipeline (e.g., Tesseract or pdf2image).
-
-#### Q8: How can you scale this application for millions of documents?
-> **Answer:** Upgrade from in-memory FAISS flat index to an ANN index (e.g., FAISS `IndexIVFFlat` or `IndexHNSW`), or deploy a dedicated cloud vector database like Pinecone, Milvus, or Qdrant with asynchronous background indexing workers.
-
-#### Q9: Why is temperature set to 0.2?
-> **Answer:** Temperature controls output randomness. A low temperature (0.0 - 0.2) forces greedy/deterministic token sampling, which is ideal for factual QA applications where precision is paramount.
-
-#### Q10: How do you evaluate RAG answer quality?
-> **Answer:** Using RAG triaging metrics such as **Faithfulness** (is the answer grounded in context?), **Answer Relevance** (did it answer the query?), and **Context Precision** (were the retrieved chunks relevant?). Tools like Ragas or TruLens automate these evaluations.
-
----
-
-## 🔮 10. Future Improvements
-- [ ] Add Optical Character Recognition (OCR) support for scanned PDF documents.
-- [ ] Implement Hybrid Search (combining BM25 keyword search with FAISS dense vector search).
-- [ ] Add support for DOCX, TXT, and CSV file formats.
-- [ ] Integrate persistent vector database storage (e.g., ChromaDB / Pinecone).
-- [ ] Add PDF document visualizer with highlighted source bounding boxes.
 
 ---
 *Developed with Python, Streamlit, LangChain, FAISS, and Google Gemini API.*
